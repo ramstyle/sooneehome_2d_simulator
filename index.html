@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SOONEEHOME · 체형 사이즈 비교</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #F5F5F7;
+    --card-bg: #FFFFFF;
+    --text-primary: #1D1D1F;
+    --text-secondary: #86868B;
+    --border-color: #E5E5E7;
+    --accent-black: #000000;
+    --accent-gray: #333336;
+    --subtle-fill: #FBFBFD;
+    --danger-red: #E53935;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 16px 80px;
+    min-height: 100vh;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* Header Branding */
+  .brand {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .brand .mark {
+    font-family: 'DM Mono', monospace;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.25em;
+    color: var(--accent-black);
+    text-transform: uppercase;
+  }
+
+  /* Progress Bar */
+  .progress-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .progress-seg {
+    flex: 1;
+    height: 2px;
+    background-color: var(--border-color);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-seg i {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background-color: var(--accent-black);
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Card Layout */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 36px 28px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    min-height: 480px;
+  }
+
+  .screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    animation: fadeIn 0.4s ease-out;
+  }
+  .screen.active {
+    display: flex;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .back-btn {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-bottom: 20px;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s ease;
+  }
+  .back-btn:hover { color: var(--accent-black); }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+    color: var(--accent-black);
+    margin-bottom: 10px;
+  }
+
+  .lede {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+
+  /* Hero Visual Box */
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--subtle-fill);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px 16px;
+    margin: 12px 0 24px;
+  }
+
+  /* Buttons & Options */
+  .btn-primary {
+    margin-top: auto;
+    background: var(--accent-black);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 14px;
+    padding: 18px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+  }
+  .btn-primary:hover {
+    background: var(--accent-gray);
+    transform: translateY(-1px);
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: auto;
+  }
+
+  .opt-btn {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 20px 22px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--accent-black);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .opt-btn:hover {
+    border-color: var(--accent-black);
+    background: var(--subtle-fill);
+  }
+
+  /* Inputs */
+  .person-row {
+    background: var(--subtle-fill);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .person-row .row-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+
+  .field-pair {
+    display: flex;
+    gap: 12px;
+  }
+  .field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field label {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
+  .field input {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 400; /* 숫자 입력 시 볼드 해제 */
+    color: var(--accent-black);
+    background: #FFFFFF;
+    width: 100%;
+    transition: border-color 0.15s ease;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent-black);
+  }
+
+  .form-error {
+    font-size: 12px;
+    color: var(--danger-red);
+    margin-top: 8px;
+    display: none;
+  }
+
+  /* Result Diagrams Responsive Grid */
+  .diagrams-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  @media (min-width: 540px) {
+    .diagrams-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .diagram-card {
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    padding: 20px;
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+  }
+  .diagram-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-black);
+    margin-bottom: 12px;
+  }
+  .diagram-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .restart-btn {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .restart-btn:hover { color: var(--accent-black); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="brand">
+    <div class="mark">SOONEEHOME</div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-seg"><i id="seg1"></i></div>
+    <div class="progress-seg"><i id="seg2"></i></div>
+  </div>
+
+  <div class="card">
+
+    <!-- SCREEN 1: START -->
+    <div class="screen active" id="s-start">
+      <h1>내 체형에 딱 맞는<br>매트리스 사이즈 비교</h1>
+      <p class="lede">키와 몸무게를 입력하시면 실제 실루엣 비율을 계산하여 매트리스 공간 여유를 직관적으로 보여드립니다.</p>
+      
+      <div class="hero-visual">
+        <svg width="180" height="95" viewBox="0 0 180 95">
+          <rect x="20" y="10" width="55" height="75" fill="#FBFBFD" stroke="#1D1D1F" stroke-width="2"/>
+          <g fill="#1D1D1F" stroke="#1D1D1F">
+            <circle cx="47.5" cy="21.5" r="5.5" stroke="none"/>
+            <rect x="41.3" y="28.55" width="12.3" height="19.8" rx="3.1" stroke="none"/>
+            <line x1="42.6" y1="30.9" x2="35.6" y2="45.4" stroke-width="4.2" stroke-linecap="round"/>
+            <line x1="52.4" y1="30.9" x2="59.4" y2="45.4" stroke-width="4.2" stroke-linecap="round"/>
+            <rect x="42.2" y="47.1" width="4.5" height="30.8" rx="2.2" stroke="none"/>
+            <rect x="48.3" y="47.1" width="4.5" height="30.8" rx="2.2" stroke="none"/>
+          </g>
+
+          <rect x="105" y="10" width="60" height="75" fill="#FBFBFD" stroke="#1D1D1F" stroke-width="2"/>
+          <g fill="#1D1D1F" stroke="#1D1D1F">
+            <circle cx="135" cy="21.5" r="5.5" stroke="none"/>
+            <rect x="128.8" y="28.55" width="12.3" height="19.8" rx="3.1" stroke="none"/>
+            <line x1="130.1" y1="30.9" x2="123.1" y2="45.4" stroke-width="4.2" stroke-linecap="round"/>
+            <line x1="139.9" y1="30.9" x2="146.9" y2="45.4" stroke-width="4.2" stroke-linecap="round"/>
+            <rect x="129.7" y="47.1" width="4.5" height="30.8" rx="2.2" stroke="none"/>
+            <rect x="135.8" y="47.1" width="4.5" height="30.8" rx="2.2" stroke="none"/>
+          </g>
+        </svg>
+      </div>
+
+      <button class="btn-primary" onclick="startCheck()">비교 시작하기 →</button>
+    </div>
+
+    <!-- SCREEN 2: USER COUNT -->
+    <div class="screen" id="s-q1">
+      <div class="eyebrow">Step 1</div>
+      <h1>주로 몇 분이<br>사용하시나요?</h1>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="chooseGroup('solo')">
+          <span>1인 사용</span>
+          <span>→</span>
+        </button>
+        <button class="opt-btn" onclick="chooseGroup('multi')">
+          <span>2인 이상 사용</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 3-1: FORM SOLO -->
+    <div class="screen" id="s-form-solo">
+      <div class="back-btn" onclick="goBack()">← 이전 단계</div>
+      <div class="eyebrow">Step 2</div>
+      <h1>키와 몸무게를<br>입력해 주세요</h1>
+      
+      <div class="person-row">
+        <div class="row-label">사용자 1</div>
+        <div class="field-pair">
+          <div class="field"><label>키 (cm)</label><input type="number" id="solo-h" placeholder="170" min="100" max="220"></div>
+          <div class="field"><label>몸무게 (kg)</label><input type="number" id="solo-w" placeholder="60" min="30" max="150"></div>
+        </div>
+      </div>
+      <p class="form-error" id="solo-error">키와 몸무게를 모두 입력해 주세요.</p>
+
+      <button class="btn-primary" style="margin-top:auto;" onclick="submitSolo()">사이즈 결과 비교하기 →</button>
+    </div>
+
+    <!-- SCREEN 3-2: FORM MULTI -->
+    <div class="screen" id="s-form-multi">
+      <div class="back-btn" onclick="goBack()">← 이전 단계</div>
+      <div class="eyebrow">Step 2</div>
+      <h1>함께 사용하실 분들의<br>신체 정보를 입력해 주세요</h1>
+      <p class="lede">최대 3명까지 입력하실 수 있습니다.</p>
+
+      <div class="person-row">
+        <div class="row-label">첫 번째 사용자</div>
+        <div class="field-pair">
+          <div class="field"><label>키 (cm)</label><input type="number" id="p1-h" placeholder="170" min="100" max="220"></div>
+          <div class="field"><label>몸무게 (kg)</label><input type="number" id="p1-w" placeholder="60" min="30" max="150"></div>
+        </div>
+      </div>
+      <div class="person-row">
+        <div class="row-label">두 번째 사용자</div>
+        <div class="field-pair">
+          <div class="field"><label>키 (cm)</label><input type="number" id="p2-h" placeholder="165" min="100" max="220"></div>
+          <div class="field"><label>몸무게 (kg)</label><input type="number" id="p2-w" placeholder="55" min="30" max="150"></div>
+        </div>
+      </div>
+      <div class="person-row">
+        <div class="row-label">세 번째 사용자 (선택)</div>
+        <div class="field-pair">
+          <div class="field"><label>키 (cm)</label><input type="number" id="p3-h" placeholder="120" min="100" max="220"></div>
+          <div class="field"><label>몸무게 (kg)</label><input type="number" id="p3-w" placeholder="25" min="30" max="150"></div>
+        </div>
+      </div>
+      <p class="form-error" id="multi-error">최소 2명의 신체 정보를 입력해 주세요.</p>
+
+      <button class="btn-primary" style="margin-top:auto;" onclick="submitMulti()">사이즈 결과 비교하기 →</button>
+    </div>
+
+    <!-- SCREEN 4: RESULT -->
+    <div class="screen" id="s-result">
+      <div class="back-btn" onclick="goBack()">← 정보 다시 입력</div>
+      <div class="eyebrow">Comparison Result</div>
+      <div class="result-intro">
+        <h1>사이즈별 여유 공간 비교</h1>
+        <p class="lede" style="margin-bottom: 16px;">입력하신 체형 실루엣 대비 남는 양옆 공간을 확인해 보세요.</p>
+      </div>
+      <div class="diagrams-grid" id="diagrams"></div>
+    </div>
+
+  </div>
+
+  <div class="restart-btn" onclick="restartAll()">처음부터 다시 체크하기</div>
+</div>
+
+<script>
+let navStack = [];
+let progressLevel = 0;
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function setProgress(step){
+  progressLevel = step;
+  for(let i=1; i<=2; i++){
+    document.getElementById('seg'+i).style.width = (i <= step) ? '100%' : '0%';
+  }
+}
+
+function startCheck(){
+  navStack.push({id:'s-start', progress:0});
+  setProgress(1);
+  go('s-q1');
+}
+
+function goBack(){
+  if(navStack.length === 0){ restartAll(); return; }
+  const prev = navStack.pop();
+  go(prev.id);
+  setProgress(prev.progress);
+}
+
+function restartAll(){
+  navStack = [];
+  go('s-start');
+  setProgress(0);
+}
+
+function chooseGroup(type){
+  navStack.push({id:'s-q1', progress:1});
+  setProgress(1);
+  if(type === 'solo') go('s-form-solo');
+  else go('s-form-multi');
+}
+
+function submitSolo(){
+  const h = parseFloat(document.getElementById('solo-h').value);
+  const w = parseFloat(document.getElementById('solo-w').value);
+  const err = document.getElementById('solo-error');
+  if(!h || !w){ err.style.display = 'block'; return; }
+  err.style.display = 'none';
+
+  navStack.push({id:'s-form-solo', progress:1});
+  setProgress(2);
+  renderResult([ estimateBody(h, w) ]);
+}
+
+function submitMulti(){
+  const rows = [
+    [document.getElementById('p1-h').value, document.getElementById('p1-w').value],
+    [document.getElementById('p2-h').value, document.getElementById('p2-w').value],
+    [document.getElementById('p3-h').value, document.getElementById('p3-w').value]
+  ];
+  const people = [];
+  rows.forEach(([h, w]) => {
+    const hh = parseFloat(h), ww = parseFloat(w);
+    if(hh && ww) people.push(estimateBody(hh, ww));
+  });
+
+  const err = document.getElementById('multi-error');
+  if(people.length < 2){ err.style.display = 'block'; return; }
+  err.style.display = 'none';
+
+  navStack.push({id:'s-form-multi', progress:1});
+  setProgress(2);
+  renderResult(people);
+}
+
+function estimateBody(heightCm, weightKg){
+  const bmi = weightKg / ((heightCm/100)*(heightCm/100));
+  const baseShoulder = heightCm * 0.23;
+  const bmiFactor = Math.min(1.35, Math.max(0.75, bmi/22));
+  const shoulder = baseShoulder * (0.82 + 0.22*bmiFactor);
+  const lyingWidth = shoulder * 1.4;
+  return { height: heightCm, shoulder, lyingWidth };
+}
+
+function pictogramSVG(cx, topY, totalWidth, heightCm, fill){
+  const h = heightCm;
+  const w = totalWidth;
+
+  const headR = Math.min(h * 0.09, w * 0.20);
+  const headCy = topY + headR;
+
+  const gapHeadTorso = h * 0.025;
+  const torsoTop = headCy + headR + gapHeadTorso;
+
+  const torsoW = w * 0.44;
+  const torsoH = h * 0.32;
+  const torsoX = cx - torsoW / 2;
+
+  const armThick = w * 0.15;
+  const shoulderY = torsoTop + torsoH * 0.12;
+
+  const lArmX1 = torsoX + armThick * 0.3;
+  const lArmX2 = (cx - w / 2) + armThick / 2;
+  const lArmY1 = shoulderY;
+  const lArmY2 = torsoTop + torsoH * 0.85;
+
+  const rArmX1 = (torsoX + torsoW) - armThick * 0.3;
+  const rArmX2 = (cx + w / 2) - armThick / 2;
+  const rArmY1 = shoulderY;
+  const rArmY2 = torsoTop + torsoH * 0.85;
+
+  const legTop = torsoTop + torsoH - h * 0.02;
+  const legH = (topY + h) - legTop;
+  const legW = w * 0.16;
+  const legGap = w * 0.06;
+
+  const leg1X = cx - legGap / 2 - legW;
+  const leg2X = cx + legGap / 2;
+
+  return `
+    <g fill="${fill}" stroke="${fill}">
+      <circle cx="${cx}" cy="${headCy}" r="${headR}" stroke="none"/>
+      <rect x="${torsoX}" y="${torsoTop}" width="${torsoW}" height="${torsoH}" rx="${torsoW * 0.25}" stroke="none"/>
+      <line x1="${lArmX1}" y1="${lArmY1}" x2="${lArmX2}" y2="${lArmY2}" stroke-width="${armThick}" stroke-linecap="round"/>
+      <line x1="${rArmX1}" y1="${rArmY1}" x2="${rArmX2}" y2="${rArmY2}" stroke-width="${armThick}" stroke-linecap="round"/>
+      <rect x="${leg1X}" y="${legTop}" width="${legW}" height="${legH}" rx="${legW / 2}" stroke="none"/>
+      <rect x="${leg2X}" y="${legTop}" width="${legW}" height="${legH}" rx="${legW / 2}" stroke="none"/>
+    </g>
+  `;
+}
+
+const MATTRESSES = [
+  {key:'ms', label:'멀티싱글', width:75},
+  {key:'ss', label:'슈퍼싱글', width:110},
+  {key:'q',  label:'퀸',       width:150},
+  {key:'lk', label:'라지킹',   width:180}
+];
+
+function renderResult(people){
+  const gapCm = 8;
+  const totalWCm = people.reduce((s,p)=>s+p.lyingWidth,0) + gapCm*(people.length-1);
+  const maxHeightCm = Math.max(...people.map(p=>p.height));
+
+  const scale = 1.5;
+  const canvasW = 340;
+  const canvasH = 380;
+
+  const groupCx = canvasW / 2;
+  const groupW = totalWCm * scale;
+
+  const themeInk = '#1D1D1F';
+  const themeBg = '#FBFBFD';
+  const themeBorder = '#1D1D1F';
+  const dangerColor = '#E53935';
+
+  let html = '';
+  MATTRESSES.forEach(m => {
+    const mattressW = m.width * scale;
+    const mattressH = 200 * scale;
+
+    const mattressX = groupCx - mattressW / 2;
+    const mattressY = (canvasH - mattressH) / 2;
+
+    let startCx = groupCx - groupW / 2;
+    let solidPeople = '';
+
+    people.forEach(p => {
+      const pW = p.lyingWidth * scale;
+      const pH = p.height * scale;
+      const pCx = startCx + pW / 2;
+      const pTop = mattressY + (mattressH - pH) / 2;
+
+      solidPeople += pictogramSVG(pCx, pTop, pW, pH, themeInk);
+      startCx += pW + gapCm * scale;
+    });
+
+    const sideGapCm = (m.width - totalWCm) / 2;
+    const isShortage = sideGapCm < 0; // 음수(-) 판단
+
+    const mLeft = mattressX;
+    const mRight = mattressX + mattressW;
+    const pGroupLeft = groupCx - groupW / 2;
+    const pGroupRight = groupCx + groupW / 2;
+
+    const arrowY = mattressY + mattressH * 0.36;
+
+    function dimLine(x1, x2, y, text, isLeftLabel, isWarning){
+      const rawLo = Math.min(x1, x2);
+      const rawHi = Math.max(x1, x2);
+      
+      const lo = rawLo + 1;
+      const hi = rawHi - 1;
+      const dist = hi - lo;
+      
+      if (dist <= 1) return '';
+
+      const head = Math.min(4, dist / 3);
+      const mid = (lo + hi) / 2;
+      const drawColor = isWarning ? dangerColor : themeInk;
+
+      // 여유 공간이 26px 미만이거나 공간 부족일 때 바깥으로 글자 배치!
+      if (dist < 26 || isWarning) {
+        const txtX = isLeftLabel ? (rawLo - 6) : (rawHi + 6);
+        const anchor = isLeftLabel ? 'end' : 'start';
+
+        return `
+          <g stroke="${drawColor}" fill="${drawColor}">
+            <line x1="${lo}" y1="${y}" x2="${hi}" y2="${y}" stroke-width="1.2"/>
+            <path d="M${lo+head},${y-head} L${lo},${y} L${lo+head},${y+head}" fill="none" stroke-width="1.2"/>
+            <path d="M${hi-head},${y-head} L${hi},${y} L${hi-head},${y+head}" fill="none" stroke-width="1.2"/>
+            <text x="${txtX}" y="${y + 3.5}" font-family="'DM Mono', monospace" font-size="11" font-weight="500" 
+                  text-anchor="${anchor}" stroke="#FFFFFF" stroke-width="3" paint-order="stroke fill" stroke-linejoin="round">${text}</text>
+          </g>
+        `;
+      } else {
+        return `
+          <g stroke="${drawColor}" fill="${drawColor}">
+            <line x1="${lo}" y1="${y}" x2="${hi}" y2="${y}" stroke-width="1.2"/>
+            <path d="M${lo+head},${y-head} L${lo},${y} L${lo+head},${y+head}" fill="none" stroke-width="1.2"/>
+            <path d="M${hi-head},${y-head} L${hi},${y} L${hi-head},${y+head}" fill="none" stroke-width="1.2"/>
+            <text x="${mid}" y="${y - 6}" font-family="'DM Mono', monospace" font-size="11.5" font-weight="500" text-anchor="middle" stroke="none">${text}</text>
+          </g>
+        `;
+      }
+    }
+
+    let sideLabels = '';
+    const isMultiPerson = people.length >= 2;
+    const skipDimensions = isMultiPerson && (m.key === 'ms' || m.key === 'ss');
+
+    if(!skipDimensions && Math.abs(sideGapCm) >= 0.1){
+      const roundedVal = Math.round(sideGapCm);
+      // 마이너스(-) 부호 정상 표시
+      const labelTxt = (roundedVal < 0 ? '-' : '') + Math.abs(roundedVal) + 'cm';
+
+      sideLabels += dimLine(mLeft, pGroupLeft, arrowY, labelTxt, true, isShortage);
+      sideLabels += dimLine(pGroupRight, mRight, arrowY, labelTxt, false, isShortage);
+    }
+
+    html += `
+    <div class="diagram-card">
+      <div class="diagram-title">${m.label} · 가로 ${m.width}cm</div>
+      <svg viewBox="0 0 ${canvasW} ${canvasH}" class="diagram-svg">
+        <rect x="${mattressX}" y="${mattressY}" width="${mattressW}" height="${mattressH}" fill="${themeBg}"/>
+        ${solidPeople}
+        <rect x="${mattressX}" y="${mattressY}" width="${mattressW}" height="${mattressH}" fill="none" stroke="${themeBorder}" stroke-width="2.5"/>
+        ${sideLabels}
+      </svg>
+    </div>`;
+  });
+
+  document.getElementById('diagrams').innerHTML = html;
+  go('s-result');
+}
+</script>
+
+</body>
+</html>
