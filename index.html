@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -240,7 +241,7 @@
     padding: 12px 14px;
     font-family: 'DM Mono', monospace;
     font-size: 14px;
-    font-weight: 400; /* 숫자 입력 시 볼드 해제 */
+    font-weight: 400;
     color: var(--accent-black);
     background: #FFFFFF;
     width: 100%;
@@ -609,7 +610,7 @@ function renderResult(people){
     });
 
     const sideGapCm = (m.width - totalWCm) / 2;
-    const isShortage = sideGapCm < 0; // 음수(-) 판단
+    const isShortage = sideGapCm < 0;
 
     const mLeft = mattressX;
     const mRight = mattressX + mattressW;
@@ -632,7 +633,6 @@ function renderResult(people){
       const mid = (lo + hi) / 2;
       const drawColor = isWarning ? dangerColor : themeInk;
 
-      // 여유 공간이 26px 미만이거나 공간 부족일 때 바깥으로 글자 배치!
       if (dist < 26 || isWarning) {
         const txtX = isLeftLabel ? (rawLo - 6) : (rawHi + 6);
         const anchor = isLeftLabel ? 'end' : 'start';
@@ -664,7 +664,6 @@ function renderResult(people){
 
     if(!skipDimensions && Math.abs(sideGapCm) >= 0.1){
       const roundedVal = Math.round(sideGapCm);
-      // 마이너스(-) 부호 정상 표시
       const labelTxt = (roundedVal < 0 ? '-' : '') + Math.abs(roundedVal) + 'cm';
 
       sideLabels += dimLine(mLeft, pGroupLeft, arrowY, labelTxt, true, isShortage);
@@ -686,6 +685,8 @@ function renderResult(people){
   document.getElementById('diagrams').innerHTML = html;
   go('s-result');
 }
+</script>
+
 <script type="text/javascript">
 (function(w, d, a){
     w.__beusablerumclient__ = {
